@@ -1,0 +1,110 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Norbert Fila">
+    <title>Ile masz lat?</title>
+    <link href="styles.css" type="text/css" rel="stylesheet" />
+</head>
+    <body>
+     <div id ="kontener">
+     <div id="info_p">
+        <div id="rok" class="info">
+            <span id ="tekst_rok">-</span>
+            lat
+        </div>
+        <div id="miesiac" class="info">
+            <span id ="tekst_miesiac">-</span>
+            miesiecy
+        </div>
+        <div id="dzien" class="info">
+            <span id ="tekst_dzien">-</span>
+            dni
+        </div>
+        <div style="clear: both"></div>
+     </div>
+      <div id="kontener2">
+        <div id="przyciski">
+            <input type="date" id="data_formularz" name="data_formularz">
+            <button id="przycisk" onclick="oblicz()">Oblicz</button>
+         </div>
+         
+      </div>
+    </div>
+        <script>
+            var dni_w_miesiacu = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            function oblicz()
+            {
+                //zmienne z podanych danych
+                var podana_Data = new Date(document.getElementById("data_formularz").value);
+                var podany_rok = podana_Data.getFullYear();
+                var podany_miesiac = podana_Data.getMonth() +1; // dodaje 1 ponieważ miesiące w js daty liczone sa od 0
+                var podany_dzien = podana_Data.getDate();
+                var podana_sekunda = podana_Data.getSeconds();  
+
+                //zmienne z aktualnego czasu
+                var aktualna_Data = new Date();
+                var aktualny_rok = aktualna_Data.getFullYear();
+                var aktualny_miesiac = aktualna_Data.getMonth() +1; 
+                var aktualny_dzien = aktualna_Data.getDate();
+                var aktualna_sekunda = aktualna_Data.getSeconds();  
+                
+               
+                if(isNaN(podany_miesiac) === true || isNaN(podany_dzien) === true || isNaN(podany_dzien)){ // sprawdzajac czy "value" "inputa" o id data_formularz czy jest pusta to jesli uzytkownik podal by np tylko dzien a miesiacu i roku nie wpisal to instriukcja if by go przepuscila 
+                    alert("Uzpelnij dane w poprawny sposob, pamietaj ze nie mozesz wprowadzic daty 29 luty przy roku nie przestepnym");
+                    return; 
+                }//w przypadku gdy podamy takie bledne dane javascript ustawi wartosc zmiennych na Null i jest to dedykowana wartosc
+                
+                if (aktualny_rok % 100 == 0 && aktualny_rok % 400 == 0){
+                    dni_w_miesiacu[1] = 29;
+                    podany_dzien = 28; // osoby ktore urodzily sie w roku przestepnym ochodza urodziny 28 lipca
+                }
+                else 
+                    dni_w_miesiacu[1] = 28;
+                
+
+                if (podany_rok > aktualny_rok ) {
+                    alert("Z podanej daty wynika ze jeszcze sie nie urodziles");
+                    return;
+                }
+
+                var rok = aktualny_rok - podany_rok;
+
+                if (aktualny_miesiac >= podany_miesiac) 
+                    var miesiac = aktualny_miesiac - podany_miesiac;
+                else {
+                    rok--; // jeszcze nie obchodzil urodzin 
+                    var miesiac = 12 - podany_miesiac + aktualny_miesiac;
+                }
+
+                
+                if (aktualny_dzien >= podany_dzien)
+                    var dzien = aktualny_dzien - podany_dzien;
+                else {
+                    miesiac--;
+                    var dzien = dni_w_miesiacu[aktualny_miesiac - 1];
+                    if (miesiac < 0) {
+                        miesiac = 11;
+                        rok--;
+                    }
+                }
+
+                if(dzien < 0)
+                    dzien = dzien * -1
+
+                document.getElementById("tekst_rok").textContent = rok;
+                document.getElementById("tekst_miesiac").textContent = miesiac;
+                document.getElementById("tekst_dzien").textContent = dzien;
+                console.log(aktualna_Data);
+                console.log("masz " + rok + " lat");
+                console.log("masz " + miesiac + " miesiecy");
+                console.log("masz " + dzien + " dni")
+        }
+
+
+
+
+        </script>
+  
+
+    </body>
